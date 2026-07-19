@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVendedoresRouteImport } from './routes/_authenticated/vendedores'
+import { Route as AuthenticatedRankingRouteImport } from './routes/_authenticated/ranking'
 import { Route as AuthenticatedKpisRouteImport } from './routes/_authenticated/kpis'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
@@ -35,6 +36,11 @@ const AuthenticatedVendedoresRoute = AuthenticatedVendedoresRouteImport.update({
   path: '/vendedores',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRankingRoute = AuthenticatedRankingRouteImport.update({
+  id: '/ranking',
+  path: '/ranking',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedKpisRoute = AuthenticatedKpisRouteImport.update({
   id: '/kpis',
   path: '/kpis',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/kpis': typeof AuthenticatedKpisRoute
+  '/ranking': typeof AuthenticatedRankingRoute
   '/vendedores': typeof AuthenticatedVendedoresRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/kpis': typeof AuthenticatedKpisRoute
+  '/ranking': typeof AuthenticatedRankingRoute
   '/vendedores': typeof AuthenticatedVendedoresRoute
 }
 export interface FileRoutesById {
@@ -67,13 +75,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/kpis': typeof AuthenticatedKpisRoute
+  '/_authenticated/ranking': typeof AuthenticatedRankingRoute
   '/_authenticated/vendedores': typeof AuthenticatedVendedoresRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/kpis' | '/vendedores'
+  fullPaths: '/' | '/auth' | '/dashboard' | '/kpis' | '/ranking' | '/vendedores'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/kpis' | '/vendedores'
+  to: '/' | '/auth' | '/dashboard' | '/kpis' | '/ranking' | '/vendedores'
   id:
     | '__root__'
     | '/'
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/_authenticated/kpis'
+    | '/_authenticated/ranking'
     | '/_authenticated/vendedores'
   fileRoutesById: FileRoutesById
 }
@@ -120,6 +130,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendedoresRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ranking': {
+      id: '/_authenticated/ranking'
+      path: '/ranking'
+      fullPath: '/ranking'
+      preLoaderRoute: typeof AuthenticatedRankingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/kpis': {
       id: '/_authenticated/kpis'
       path: '/kpis'
@@ -140,12 +157,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedKpisRoute: typeof AuthenticatedKpisRoute
+  AuthenticatedRankingRoute: typeof AuthenticatedRankingRoute
   AuthenticatedVendedoresRoute: typeof AuthenticatedVendedoresRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedKpisRoute: AuthenticatedKpisRoute,
+  AuthenticatedRankingRoute: AuthenticatedRankingRoute,
   AuthenticatedVendedoresRoute: AuthenticatedVendedoresRoute,
 }
 
