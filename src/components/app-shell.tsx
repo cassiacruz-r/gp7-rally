@@ -34,7 +34,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-const navGroups = [
+type NavItem = { to: string; label: string; icon: any; highlight?: boolean };
+const navGroups: { label: string; items: NavItem[] }[] = [
   {
     label: "Operação",
     items: [
@@ -61,7 +62,7 @@ const navGroups = [
       { to: "/configuracoes", label: "Configurações", icon: Settings },
     ],
   },
-] as const;
+];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -110,7 +111,7 @@ function AppSidebar() {
                   return (
                     <SidebarMenuItem key={item.to}>
                       <SidebarMenuButton asChild isActive={active} tooltip={item.label}>
-                        <Link to={item.to} className="flex items-center gap-2.5">
+                        <Link to={item.to as any} className="flex items-center gap-2.5">
                           <item.icon className="h-4 w-4" />
                           <span className={item.highlight ? "font-semibold" : ""}>{item.label}</span>
                         </Link>
