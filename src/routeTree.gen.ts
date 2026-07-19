@@ -13,9 +13,16 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVendedoresRouteImport } from './routes/_authenticated/vendedores'
+import { Route as AuthenticatedReunioesRouteImport } from './routes/_authenticated/reunioes'
 import { Route as AuthenticatedRankingRouteImport } from './routes/_authenticated/ranking'
+import { Route as AuthenticatedPautasRouteImport } from './routes/_authenticated/pautas'
+import { Route as AuthenticatedModoReuniaoRouteImport } from './routes/_authenticated/modo-reuniao'
+import { Route as AuthenticatedMetasRouteImport } from './routes/_authenticated/metas'
 import { Route as AuthenticatedKpisRouteImport } from './routes/_authenticated/kpis'
+import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedBibliotecaRouteImport } from './routes/_authenticated/biblioteca'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -36,9 +43,30 @@ const AuthenticatedVendedoresRoute = AuthenticatedVendedoresRouteImport.update({
   path: '/vendedores',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReunioesRoute = AuthenticatedReunioesRouteImport.update({
+  id: '/reunioes',
+  path: '/reunioes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRankingRoute = AuthenticatedRankingRouteImport.update({
   id: '/ranking',
   path: '/ranking',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPautasRoute = AuthenticatedPautasRouteImport.update({
+  id: '/pautas',
+  path: '/pautas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedModoReuniaoRoute =
+  AuthenticatedModoReuniaoRouteImport.update({
+    id: '/modo-reuniao',
+    path: '/modo-reuniao',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMetasRoute = AuthenticatedMetasRouteImport.update({
+  id: '/metas',
+  path: '/metas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedKpisRoute = AuthenticatedKpisRouteImport.update({
@@ -46,26 +74,56 @@ const AuthenticatedKpisRoute = AuthenticatedKpisRouteImport.update({
   path: '/kpis',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHistoricoRoute = AuthenticatedHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBibliotecaRoute = AuthenticatedBibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/biblioteca': typeof AuthenticatedBibliotecaRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
   '/kpis': typeof AuthenticatedKpisRoute
+  '/metas': typeof AuthenticatedMetasRoute
+  '/modo-reuniao': typeof AuthenticatedModoReuniaoRoute
+  '/pautas': typeof AuthenticatedPautasRoute
   '/ranking': typeof AuthenticatedRankingRoute
+  '/reunioes': typeof AuthenticatedReunioesRoute
   '/vendedores': typeof AuthenticatedVendedoresRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/biblioteca': typeof AuthenticatedBibliotecaRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
   '/kpis': typeof AuthenticatedKpisRoute
+  '/metas': typeof AuthenticatedMetasRoute
+  '/modo-reuniao': typeof AuthenticatedModoReuniaoRoute
+  '/pautas': typeof AuthenticatedPautasRoute
   '/ranking': typeof AuthenticatedRankingRoute
+  '/reunioes': typeof AuthenticatedReunioesRoute
   '/vendedores': typeof AuthenticatedVendedoresRoute
 }
 export interface FileRoutesById {
@@ -73,24 +131,64 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/biblioteca': typeof AuthenticatedBibliotecaRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/kpis': typeof AuthenticatedKpisRoute
+  '/_authenticated/metas': typeof AuthenticatedMetasRoute
+  '/_authenticated/modo-reuniao': typeof AuthenticatedModoReuniaoRoute
+  '/_authenticated/pautas': typeof AuthenticatedPautasRoute
   '/_authenticated/ranking': typeof AuthenticatedRankingRoute
+  '/_authenticated/reunioes': typeof AuthenticatedReunioesRoute
   '/_authenticated/vendedores': typeof AuthenticatedVendedoresRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/kpis' | '/ranking' | '/vendedores'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/biblioteca'
+    | '/configuracoes'
+    | '/dashboard'
+    | '/historico'
+    | '/kpis'
+    | '/metas'
+    | '/modo-reuniao'
+    | '/pautas'
+    | '/ranking'
+    | '/reunioes'
+    | '/vendedores'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/kpis' | '/ranking' | '/vendedores'
+  to:
+    | '/'
+    | '/auth'
+    | '/biblioteca'
+    | '/configuracoes'
+    | '/dashboard'
+    | '/historico'
+    | '/kpis'
+    | '/metas'
+    | '/modo-reuniao'
+    | '/pautas'
+    | '/ranking'
+    | '/reunioes'
+    | '/vendedores'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/biblioteca'
+    | '/_authenticated/configuracoes'
     | '/_authenticated/dashboard'
+    | '/_authenticated/historico'
     | '/_authenticated/kpis'
+    | '/_authenticated/metas'
+    | '/_authenticated/modo-reuniao'
+    | '/_authenticated/pautas'
     | '/_authenticated/ranking'
+    | '/_authenticated/reunioes'
     | '/_authenticated/vendedores'
   fileRoutesById: FileRoutesById
 }
@@ -130,11 +228,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendedoresRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reunioes': {
+      id: '/_authenticated/reunioes'
+      path: '/reunioes'
+      fullPath: '/reunioes'
+      preLoaderRoute: typeof AuthenticatedReunioesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/ranking': {
       id: '/_authenticated/ranking'
       path: '/ranking'
       fullPath: '/ranking'
       preLoaderRoute: typeof AuthenticatedRankingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pautas': {
+      id: '/_authenticated/pautas'
+      path: '/pautas'
+      fullPath: '/pautas'
+      preLoaderRoute: typeof AuthenticatedPautasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/modo-reuniao': {
+      id: '/_authenticated/modo-reuniao'
+      path: '/modo-reuniao'
+      fullPath: '/modo-reuniao'
+      preLoaderRoute: typeof AuthenticatedModoReuniaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/metas': {
+      id: '/_authenticated/metas'
+      path: '/metas'
+      fullPath: '/metas'
+      preLoaderRoute: typeof AuthenticatedMetasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/kpis': {
@@ -144,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKpisRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/historico': {
+      id: '/_authenticated/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof AuthenticatedHistoricoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -151,20 +284,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/biblioteca': {
+      id: '/_authenticated/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/biblioteca'
+      preLoaderRoute: typeof AuthenticatedBibliotecaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedBibliotecaRoute: typeof AuthenticatedBibliotecaRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedKpisRoute: typeof AuthenticatedKpisRoute
+  AuthenticatedMetasRoute: typeof AuthenticatedMetasRoute
+  AuthenticatedModoReuniaoRoute: typeof AuthenticatedModoReuniaoRoute
+  AuthenticatedPautasRoute: typeof AuthenticatedPautasRoute
   AuthenticatedRankingRoute: typeof AuthenticatedRankingRoute
+  AuthenticatedReunioesRoute: typeof AuthenticatedReunioesRoute
   AuthenticatedVendedoresRoute: typeof AuthenticatedVendedoresRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedBibliotecaRoute: AuthenticatedBibliotecaRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedKpisRoute: AuthenticatedKpisRoute,
+  AuthenticatedMetasRoute: AuthenticatedMetasRoute,
+  AuthenticatedModoReuniaoRoute: AuthenticatedModoReuniaoRoute,
+  AuthenticatedPautasRoute: AuthenticatedPautasRoute,
   AuthenticatedRankingRoute: AuthenticatedRankingRoute,
+  AuthenticatedReunioesRoute: AuthenticatedReunioesRoute,
   AuthenticatedVendedoresRoute: AuthenticatedVendedoresRoute,
 }
 
