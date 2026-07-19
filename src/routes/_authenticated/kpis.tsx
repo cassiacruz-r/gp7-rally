@@ -14,8 +14,8 @@ export const Route = createFileRoute("/_authenticated/kpis")({
   component: KpisPage,
 });
 
-type K = { id?: string; nome: string; valor: number; meta: number; unidade: string; ordem: number };
-const empty: K = { nome: "", valor: 0, meta: 0, unidade: "", ordem: 0 };
+type K = { id?: string; nome: string; resultado: number; meta: number; pontuacao: number; ordem: number; observacao?: string };
+const empty: K = { nome: "", resultado: 0, meta: 0, pontuacao: 0, ordem: 0, observacao: "" };
 
 function KpisPage() {
   const qc = useQueryClient();
@@ -53,9 +53,9 @@ function KpisPage() {
             <div className="space-y-3">
               <div><Label>Nome</Label><Input value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-3">
-                <div><Label>Valor atual</Label><Input type="number" value={form.valor} onChange={(e) => setForm({ ...form, valor: Number(e.target.value) })} /></div>
+                <div><Label>Resultado</Label><Input type="number" value={form.resultado} onChange={(e) => setForm({ ...form, resultado: Number(e.target.value) })} /></div>
                 <div><Label>Meta</Label><Input type="number" value={form.meta} onChange={(e) => setForm({ ...form, meta: Number(e.target.value) })} /></div>
-                <div><Label>Unidade</Label><Input placeholder="%, R$, un" value={form.unidade} onChange={(e) => setForm({ ...form, unidade: e.target.value })} /></div>
+                <div><Label>Pontuação</Label><Input type="number" value={form.pontuacao} onChange={(e) => setForm({ ...form, pontuacao: Number(e.target.value) })} /></div>
                 <div><Label>Ordem</Label><Input type="number" value={form.ordem} onChange={(e) => setForm({ ...form, ordem: Number(e.target.value) })} /></div>
               </div>
             </div>
@@ -66,14 +66,14 @@ function KpisPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {(rows ?? []).map((k: any) => {
-          const p = k.meta > 0 ? Math.round((Number(k.valor) / Number(k.meta)) * 100) : 0;
+          const p = k.meta > 0 ? Math.round((Number(k.resultado) / Number(k.meta)) * 100) : 0;
           return (
             <div key={k.id} className="card-soft p-5">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-sm text-muted-foreground">{k.nome}</div>
                   <div className="text-3xl font-bold mt-1 tabular-nums" style={{ fontFamily: "var(--font-display)" }}>
-                    {Number(k.valor).toLocaleString("pt-BR")}<span className="text-base text-muted-foreground ml-1">{k.unidade}</span>
+                    {Number(k.resultado).toLocaleString("pt-BR")}
                   </div>
                 </div>
                 <div className="flex gap-1">
@@ -83,7 +83,7 @@ function KpisPage() {
               </div>
               <div className="mt-4 space-y-1">
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Meta: {Number(k.meta).toLocaleString("pt-BR")} {k.unidade}</span>
+                  <span>Meta: {Number(k.meta).toLocaleString("pt-BR")}</span>
                   <span className={p >= 100 ? "text-success" : p >= 70 ? "text-warning" : "text-danger"}>{p}%</span>
                 </div>
                 <div className="h-2 rounded-full bg-muted overflow-hidden">
