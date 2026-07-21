@@ -81,10 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "GP7 - ADRIANO | CRM de Reuniões" },
       { name: "description", content: "Sistema de gestão e apresentação das reuniões diárias da equipe comercial GP7." },
-      { property: "og:title", content: "GP7 - ADRIANO" },
-      { property: "og:description", content: "CRM de reuniões da equipe comercial GP7." },
+      { property: "og:title", content: "GP7 - ADRIANO | CRM de Reuniões" },
+      { property: "og:description", content: "Sistema de gestão e apresentação das reuniões diárias da equipe comercial GP7." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "GP7 - ADRIANO | CRM de Reuniões" },
+      { name: "twitter:description", content: "Sistema de gestão e apresentação das reuniões diárias da equipe comercial GP7." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7373c2eb-d19b-4d44-be63-9a0f3efcb9ae/id-preview-51a16980--793a4952-9442-423d-a791-1c580729a55b.lovable.app-1784598776135.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7373c2eb-d19b-4d44-be63-9a0f3efcb9ae/id-preview-51a16980--793a4952-9442-423d-a791-1c580729a55b.lovable.app-1784598776135.png" },
     ],
     links: [
       {
