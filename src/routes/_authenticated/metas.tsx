@@ -11,6 +11,9 @@ import { Plus, Pencil, Trash2, Target } from "lucide-react";
 import { toast } from "sonner";
 import { pct, statusColor, fmtNumber } from "@/lib/format";
 
+const TEXT_TONE = { success: "text-success", warning: "text-warning", danger: "text-danger" } as const;
+const BAR_TONE = { success: "bg-success", warning: "bg-warning", danger: "bg-danger" } as const;
+
 export const Route = createFileRoute("/_authenticated/metas")({
   head: () => ({
     meta: [
@@ -129,10 +132,10 @@ function MetasPage() {
               </div>
               <div className="mt-4 flex items-end justify-between">
                 <div className="text-2xl font-bold tabular-nums" style={{ fontFamily: "var(--font-display)" }}>{fmtNumber(Number(m.realizado))}</div>
-                <div className={`text-sm font-semibold text-${s}`}>{p}%</div>
+                <div className={`text-sm font-semibold ${TEXT_TONE[s]}`}>{p}%</div>
               </div>
               <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
-                <div className={`h-full bg-${s} transition-all`} style={{ width: `${Math.min(p, 100)}%` }} />
+                <div className={`h-full ${BAR_TONE[s]} transition-all`} style={{ width: `${Math.min(p, 100)}%` }} />
               </div>
               <div className="mt-1 text-xs text-muted-foreground">Meta: {fmtNumber(Number(m.valor))}</div>
               {m.observacao && <p className="mt-3 text-sm text-muted-foreground">{m.observacao}</p>}
