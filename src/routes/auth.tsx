@@ -9,8 +9,14 @@ import { toast } from "sonner";
 import { LockKeyhole } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  ssr: false,
-  head: () => ({ meta: [{ title: "Entrar | GP7 - ADRIANO" }] }),
+  head: () => ({
+    meta: [
+      { title: "Entrar | GP7 - ADRIANO" },
+      { name: "description", content: "Acesso do administrador ao CRM de reuniões da equipe comercial GP7." },
+      { property: "og:title", content: "Entrar | GP7 - ADRIANO" },
+      { property: "og:description", content: "Acesso do administrador ao CRM de reuniões da equipe comercial GP7." },
+    ],
+  }),
   component: AuthPage,
 });
 
