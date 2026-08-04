@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { MidiaUpload, MIDIA_ICON } from "@/components/midia-upload";
 
 export const Route = createFileRoute("/_authenticated/pautas")({
   head: () => ({ meta: [{ title: "Pautas | GP7 - ADRIANO" }] }),
@@ -443,13 +444,10 @@ function PautaDetail({
                   </span>
                   {b.midia_url && (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-brand/10 text-brand flex items-center gap-1">
-                      {b.midia_tipo === "video" ? (
-                        <Video className="h-3 w-3" />
-                      ) : b.midia_tipo === "imagem" ? (
-                        <ImageIcon className="h-3 w-3" />
-                      ) : (
-                        <LinkIcon className="h-3 w-3" />
-                      )}
+                      {(() => {
+                        const MI = (MIDIA_ICON as any)[b.midia_tipo ?? ""] ?? LinkIcon;
+                        return <MI className="h-3 w-3" />;
+                      })()}
                       {b.midia_tipo}
                     </span>
                   )}
@@ -515,53 +513,22 @@ function PautaDetail({
                 placeholder="Ex: Gente e Segurança"
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Tempo (min)</Label>
-                <Input
-                  type="number"
-                  min={1}
-                  value={blocoForm.tempo_minutos ?? 5}
-                  onChange={(e) =>
-                    setBlocoForm({ ...blocoForm, tempo_minutos: Number(e.target.value) })
-                  }
-                />
-              </div>
-              <div>
-                <Label>Tipo de mídia</Label>
-                <Select
-                  value={blocoForm.midia_tipo ?? "nenhuma"}
-                  onValueChange={(v) =>
-                    setBlocoForm({
-                      ...blocoForm,
-                      midia_tipo: v === "nenhuma" ? null : v,
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="nenhuma">Nenhuma</SelectItem>
-                    <SelectItem value="imagem">Imagem</SelectItem>
-                    <SelectItem value="video">Vídeo</SelectItem>
-                    <SelectItem value="link">Link</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div>
+              <Label>Tempo (min)</Label>
+              <Input
+                type="number"
+                min={1}
+                value={blocoForm.tempo_minutos ?? 5}
+                onChange={(e) =>
+                  setBlocoForm({ ...blocoForm, tempo_minutos: Number(e.target.value) })
+                }
+              />
             </div>
-            {blocoForm.midia_tipo && (
-              <div>
-                <Label>URL da mídia</Label>
-                <Input
-                  value={blocoForm.midia_url ?? ""}
-                  onChange={(e) =>
-                    setBlocoForm({ ...blocoForm, midia_url: e.target.value })
-                  }
-                  placeholder="https://..."
-                />
-              </div>
-            )}
+            <MidiaUpload
+              url={blocoForm.midia_url ?? null}
+              tipo={blocoForm.midia_tipo ?? null}
+              onChange={(v) => setBlocoForm({ ...blocoForm, ...v })}
+            />
             <div>
               <Label>Descrição</Label>
               <Textarea
