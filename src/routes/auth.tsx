@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { LockKeyhole } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Entrar | GP7 - ADRIANO" },
