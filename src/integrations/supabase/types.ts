@@ -262,6 +262,95 @@ export type Database = {
         }
         Relationships: []
       }
+      reuniao_presencas: {
+        Row: {
+          created_at: string
+          id: string
+          presente: boolean
+          reuniao_id: string
+          vendedor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          presente?: boolean
+          reuniao_id: string
+          vendedor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          presente?: boolean
+          reuniao_id?: string
+          vendedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reuniao_presencas_reuniao_id_fkey"
+            columns: ["reuniao_id"]
+            isOneToOne: false
+            referencedRelation: "reunioes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reuniao_presencas_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "vendedores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reunioes: {
+        Row: {
+          created_at: string
+          data: string
+          duracao_minutos: number
+          hora: string
+          id: string
+          observacoes: string | null
+          pauta_id: string | null
+          responsavel: string | null
+          status: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          duracao_minutos?: number
+          hora?: string
+          id?: string
+          observacoes?: string | null
+          pauta_id?: string | null
+          responsavel?: string | null
+          status?: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          duracao_minutos?: number
+          hora?: string
+          id?: string
+          observacoes?: string | null
+          pauta_id?: string | null
+          responsavel?: string | null
+          status?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reunioes_pauta_id_fkey"
+            columns: ["pauta_id"]
+            isOneToOne: false
+            referencedRelation: "pautas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendedores: {
         Row: {
           created_at: string
