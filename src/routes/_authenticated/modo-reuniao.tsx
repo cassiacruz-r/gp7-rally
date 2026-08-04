@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
+import { useMidiaUrl } from "@/lib/midia";
 
 const searchSchema = z.object({
   pauta: z.string().optional(),
@@ -335,32 +336,7 @@ function Presenter({
               </p>
             )}
             {current.midia_url && (
-              <div className="mt-8 max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
-                {current.midia_tipo === "imagem" && (
-                  <img
-                    src={current.midia_url}
-                    alt=""
-                    className="w-full max-h-[45vh] object-contain"
-                  />
-                )}
-                {current.midia_tipo === "video" && (
-                  <video
-                    src={current.midia_url}
-                    controls
-                    className="w-full max-h-[45vh]"
-                  />
-                )}
-                {current.midia_tipo === "link" && (
-                  <a
-                    href={current.midia_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block p-4 text-brand underline"
-                  >
-                    {current.midia_url}
-                  </a>
-                )}
-              </div>
+              <BlocoMidia url={current.midia_url} tipo={current.midia_tipo} />
             )}
             {current.observacoes && (
               <div className="mt-8 px-5 py-3 rounded-lg bg-white/5 border border-white/10 text-sm text-white/60 max-w-3xl">
@@ -423,6 +399,24 @@ function Presenter({
           <ChevronRight className="h-5 w-5" />
         </Button>
       </div>
+    </div>
+  );
+}
+function BlocoMidia({ url, tipo }: { url: string; tipo: string | null }) {
+  const src = useMidiaUrl(url);
+  if (!src) return null;
+  return (
+    <div className="mt-8 max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
+      {tipo === "imagem" && <img src={src} alt="" className="w-full max-h-[45vh] object-contain" />}
+      {tipo === "video" && <video src={src} controls className="w-full max-h-[45vh]" />}
+      {tipo === "pdf" && (
+        <object data={src} type="application/pdf" className="w-full h-[45vh]">
+          <a href={src} target="_blank" rel="noreferrer" className="block p-4 text-brand underline">Abrir PDF</a>
+        </object>
+      )}
+      {(tipo === "link" || tipo === "arquivo") && (
+        <a href={src} target="_blank" rel="noreferrer" className="block p-4 text-brand underline break-all">{src}</a>
+      )}
     </div>
   );
 }
