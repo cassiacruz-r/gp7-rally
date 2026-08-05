@@ -35,7 +35,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { MidiaUpload, MIDIA_ICON } from "@/components/midia-upload";
+import { MidiaGaleria, MIDIA_ICON } from "@/components/midia-galeria";
+import { parseMidias, type MidiaItem } from "@/lib/midia";
 
 export const Route = createFileRoute("/_authenticated/pautas")({
   head: () => ({ meta: [{ title: "Pautas | GP7 - ADRIANO" }] }),
@@ -78,6 +79,7 @@ type Bloco = {
   tempo_minutos: number;
   midia_tipo: string | null;
   midia_url: string | null;
+  midias?: MidiaItem[] | null;
 };
 
 function PautasPage() {
@@ -299,6 +301,7 @@ function PautaDetail({
       tempo_minutos: Number(blocoForm.tempo_minutos ?? 5),
       midia_tipo: blocoForm.midia_tipo || null,
       midia_url: blocoForm.midia_url || null,
+      midias: (blocoForm.midias ?? []) as any,
       ordem: blocoForm.id ? blocoForm.ordem! : nextOrder,
     };
     const res = blocoForm.id
@@ -442,15 +445,15 @@ function PautaDetail({
                   <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
                     {b.tempo_minutos} min
                   </span>
-                  {b.midia_url && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-brand/10 text-brand flex items-center gap-1">
+                  {parseMidias(b).map((m, mi) => (
+                    <span key={mi} className="text-xs px-2 py-0.5 rounded-full bg-brand/10 text-brand flex items-center gap-1">
                       {(() => {
-                        const MI = (MIDIA_ICON as any)[b.midia_tipo ?? ""] ?? LinkIcon;
+                        const MI = (MIDIA_ICON as any)[m.tipo] ?? LinkIcon;
                         return <MI className="h-3 w-3" />;
                       })()}
-                      {b.midia_tipo}
+                      {m.tipo}
                     </span>
-                  )}
+                  ))}
                 </div>
                 {b.descricao && (
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
@@ -468,7 +471,7 @@ function PautaDetail({
                   size="sm"
                   variant="ghost"
                   onClick={() => {
-                    setBlocoForm(b);
+                    setBlocoForm({ ...b, midias: parseMidias(b) });
                     setBlocoOpen(true);
                   }}
                 >
@@ -491,7 +494,7 @@ function PautaDetail({
       <Button
         variant="outline"
         onClick={() => {
-          setBlocoForm({ tempo_minutos: 5 });
+          setBlocoForm({ tempo_minutos: 5, midias: [] });
           setBlocoOpen(true);
         }}
         className="w-full gap-2"
@@ -524,10 +527,9 @@ function PautaDetail({
                 }
               />
             </div>
-            <MidiaUpload
-              url={blocoForm.midia_url ?? null}
-              tipo={blocoForm.midia_tipo ?? null}
-              onChange={(v) => setBlocoForm({ ...blocoForm, ...v })}
+            <MidiaGaleria
+              midias={blocoForm.midias ?? []}
+              onChange={(v) => setBlocoForm({ ...blocoForm, midias: v })}
             />
             <div>
               <Label>Descrição</Label>
