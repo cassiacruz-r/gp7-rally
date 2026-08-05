@@ -31,3 +31,30 @@ export function useMidiaUrl(url?: string | null) {
   });
   return url && !isStoragePath(url) ? url : (data ?? null);
 }
+
+export type MidiaItem = { url: string; tipo: string; legenda?: string | null };
+
+/** Lê a galeria de mídias de um bloco, com fallback para o campo antigo único. */
+export function parseMidias(bloco: {
+  midias?: unknown;
+  midia_url?: string | null;
+  midia_tipo?: string | null;
+}): MidiaItem[] {
+  const raw = bloco?.midias;
+  const list = Array.isArray(raw) ? raw : typeof raw === "string" ? safeJson(raw) : [];
+  const items = list
+    .filter((m: any) => m && typeof m.url === "string" && m.url)
+    .map((m: any) => ({ url: m.url as string, tipo: (m.tipo as string) || "arquivo", legenda: m.legenda ?? null }));
+  if (items.length) return items;
+  if (bloco?.midia_url) return [{ url: bloco.midia_url, tipo: bloco.midia_tipo || "arquivo", legenda: null }];
+  return [];
+}
+
+function safeJson(s: string): any[] {
+  try {
+    const v = JSON.parse(s);
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}

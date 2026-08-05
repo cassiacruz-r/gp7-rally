@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
-import { useMidiaUrl } from "@/lib/midia";
+import { useMidiaUrl, parseMidias, type MidiaItem } from "@/lib/midia";
 
 const searchSchema = z.object({
   pauta: z.string().optional(),
@@ -50,6 +50,7 @@ type Bloco = {
   tempo_minutos: number;
   midia_tipo: string | null;
   midia_url: string | null;
+  midias?: MidiaItem[] | null;
 };
 
 function ModoReuniaoPage() {
@@ -335,9 +336,7 @@ function Presenter({
                 {current.descricao}
               </p>
             )}
-            {current.midia_url && (
-              <BlocoMidia url={current.midia_url} tipo={current.midia_tipo} />
-            )}
+            <BlocoGaleria key={`g-${current.id}`} midias={parseMidias(current)} />
             {current.observacoes && (
               <div className="mt-8 px-5 py-3 rounded-lg bg-white/5 border border-white/10 text-sm text-white/60 max-w-3xl">
                 <span className="font-semibold text-white/80">Notas: </span>
@@ -402,11 +401,60 @@ function Presenter({
     </div>
   );
 }
+function BlocoGaleria({ midias }: { midias: MidiaItem[] }) {
+  const [i, setI] = useState(0);
+  useEffect(() => setI(0), [midias.length]);
+  useEffect(() => {
+    if (midias.length < 2) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown") { e.preventDefault(); setI((v) => Math.min(midias.length - 1, v + 1)); }
+      if (e.key === "ArrowUp") { e.preventDefault(); setI((v) => Math.max(0, v - 1)); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [midias.length]);
+
+  if (!midias.length) return null;
+  const atual = midias[Math.min(i, midias.length - 1)];
+  return (
+    <div className="mt-8">
+      <BlocoMidia url={atual.url} tipo={atual.tipo} />
+      {atual.legenda && (
+        <div className="text-sm text-white/60 mt-2">{atual.legenda}</div>
+      )}
+      {midias.length > 1 && (
+        <div className="flex items-center gap-2 mt-4 overflow-x-auto">
+          {midias.map((m, idx) => (
+            <button
+              key={idx}
+              onClick={() => setI(idx)}
+              className={`h-14 w-20 rounded-lg overflow-hidden border shrink-0 grid place-items-center bg-white/5 ${
+                idx === i ? "border-brand ring-2 ring-brand" : "border-white/15"
+              }`}
+              title={m.legenda ?? m.tipo}
+            >
+              <Thumb url={m.url} tipo={m.tipo} index={idx} />
+            </button>
+          ))}
+          <span className="text-xs text-white/40 ml-2 whitespace-nowrap">↑ ↓ para navegar nas mídias</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Thumb({ url, tipo, index }: { url: string; tipo: string; index: number }) {
+  const src = useMidiaUrl(url);
+  if (src && tipo === "imagem") return <img src={src} alt="" className="h-full w-full object-cover" />;
+  if (src && tipo === "video") return <video src={src} muted className="h-full w-full object-cover" />;
+  return <span className="text-xs text-white/60">{index + 1}</span>;
+}
+
 function BlocoMidia({ url, tipo }: { url: string; tipo: string | null }) {
   const src = useMidiaUrl(url);
   if (!src) return null;
   return (
-    <div className="mt-8 max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
+    <div className="max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
       {tipo === "imagem" && <img src={src} alt="" className="w-full max-h-[45vh] object-contain" />}
       {tipo === "video" && <video src={src} controls className="w-full max-h-[45vh]" />}
       {tipo === "pdf" && (

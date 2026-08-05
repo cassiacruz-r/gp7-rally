@@ -51,6 +51,7 @@ export type Database = {
           id: string
           midia_tipo: string | null
           midia_url: string | null
+          midias: Json
           observacoes: string | null
           ordem: number
           pauta_id: string
@@ -64,6 +65,7 @@ export type Database = {
           id?: string
           midia_tipo?: string | null
           midia_url?: string | null
+          midias?: Json
           observacoes?: string | null
           ordem?: number
           pauta_id: string
@@ -77,6 +79,7 @@ export type Database = {
           id?: string
           midia_tipo?: string | null
           midia_url?: string | null
+          midias?: Json
           observacoes?: string | null
           ordem?: number
           pauta_id?: string
