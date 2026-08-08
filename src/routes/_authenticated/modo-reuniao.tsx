@@ -312,7 +312,7 @@ function Presenter({
       </div>
 
       {/* Slide */}
-      <div className="flex-1 flex items-stretch justify-center px-8 py-6 overflow-hidden">
+      <div className="flex-1 relative flex items-stretch justify-center overflow-hidden">
         <AnimatePresence mode="wait">
           {(() => {
             const midias = parseMidias(current);
@@ -324,32 +324,34 @@ function Presenter({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className={`w-full flex flex-col min-h-0 ${temMidia ? "max-w-none" : "max-w-6xl justify-center"}`}
+                className={`w-full flex flex-col min-h-0 ${
+                  temMidia ? "max-w-none absolute inset-0" : "max-w-6xl justify-center px-8 py-6"
+                }`}
               >
-                <div className="shrink-0">
-                  <div className="text-brand text-sm uppercase tracking-widest font-semibold mb-2">
-                    Bloco {idx + 1} de {blocos.length}
-                  </div>
-                  <h1
-                    className={`font-bold leading-tight tracking-tight ${
-                      temMidia ? "text-3xl lg:text-4xl" : "text-6xl lg:text-7xl"
-                    }`}
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    {current.titulo}
-                  </h1>
-                  {current.descricao && (
-                    <p
-                      className={`text-white/80 leading-relaxed max-w-5xl ${
-                        temMidia ? "text-lg mt-2 line-clamp-2" : "text-2xl mt-6"
-                      }`}
+                {temMidia ? (
+                  <BlocoGaleria
+                    key={`g-${current.id}`}
+                    midias={midias}
+                    titulo={current.titulo}
+                    legendaBloco={`Bloco ${idx + 1} de ${blocos.length}`}
+                  />
+                ) : (
+                  <div className="shrink-0">
+                    <div className="text-brand text-sm uppercase tracking-widest font-semibold mb-2">
+                      Bloco {idx + 1} de {blocos.length}
+                    </div>
+                    <h1
+                      className="font-bold leading-tight tracking-tight text-6xl lg:text-7xl"
+                      style={{ fontFamily: "var(--font-display)" }}
                     >
-                      {current.descricao}
-                    </p>
-                  )}
-                </div>
-                {temMidia && (
-                  <BlocoGaleria key={`g-${current.id}`} midias={midias} />
+                      {current.titulo}
+                    </h1>
+                    {current.descricao && (
+                      <p className="text-white/80 leading-relaxed max-w-5xl text-2xl mt-6">
+                        {current.descricao}
+                      </p>
+                    )}
+                  </div>
                 )}
                 {current.observacoes && !temMidia && (
                   <div className="mt-8 px-5 py-3 rounded-lg bg-white/5 border border-white/10 text-sm text-white/60 max-w-3xl">
@@ -417,8 +419,17 @@ function Presenter({
     </div>
   );
 }
-function BlocoGaleria({ midias }: { midias: MidiaItem[] }) {
+function BlocoGaleria({
+  midias,
+  titulo,
+  legendaBloco,
+}: {
+  midias: MidiaItem[];
+  titulo: string;
+  legendaBloco: string;
+}) {
   const [i, setI] = useState(0);
+  const [chrome, setChrome] = useState(true);
   useEffect(() => setI(0), [midias.length]);
   useEffect(() => {
     if (midias.length < 2) return;
@@ -433,29 +444,53 @@ function BlocoGaleria({ midias }: { midias: MidiaItem[] }) {
   if (!midias.length) return null;
   const atual = midias[Math.min(i, midias.length - 1)];
   return (
-    <div className="mt-4 flex-1 min-h-0 flex flex-col">
-      <div className="flex-1 min-h-0">
+    <div className="absolute inset-0 bg-black">
+      {/* Mídia ocupando toda a tela */}
+      <div className="absolute inset-0" onDoubleClick={() => setChrome((c) => !c)}>
         <BlocoMidia url={atual.url} tipo={atual.tipo} />
       </div>
-      {atual.legenda && (
-        <div className="text-sm text-white/60 mt-2 shrink-0">{atual.legenda}</div>
-      )}
-      {midias.length > 1 && (
-        <div className="flex items-center gap-2 mt-3 overflow-x-auto shrink-0">
-          {midias.map((m, idx) => (
-            <button
-              key={idx}
-              onClick={() => setI(idx)}
-              className={`h-14 w-20 rounded-lg overflow-hidden border shrink-0 grid place-items-center bg-white/5 ${
-                idx === i ? "border-brand ring-2 ring-brand" : "border-white/15"
-              }`}
-              title={m.legenda ?? m.tipo}
+
+      {chrome && (
+        <>
+          {/* Cabeçalho sobreposto */}
+          <div className="absolute top-0 inset-x-0 p-6 bg-gradient-to-b from-black/70 to-transparent pointer-events-none">
+            <div className="text-brand text-xs uppercase tracking-widest font-semibold">
+              {legendaBloco}
+            </div>
+            <h1
+              className="text-2xl lg:text-3xl font-bold leading-tight drop-shadow"
+              style={{ fontFamily: "var(--font-display)" }}
             >
-              <Thumb url={m.url} tipo={m.tipo} index={idx} />
-            </button>
-          ))}
-          <span className="text-xs text-white/40 ml-2 whitespace-nowrap">↑ ↓ para navegar nas mídias</span>
-        </div>
+              {titulo}
+            </h1>
+          </div>
+
+          {/* Rodapé sobreposto */}
+          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            {atual.legenda && (
+              <div className="text-sm text-white/80 mb-2 px-1">{atual.legenda}</div>
+            )}
+            {midias.length > 1 && (
+              <div className="flex items-center gap-2 overflow-x-auto">
+                {midias.map((m, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setI(idx)}
+                    className={`h-14 w-20 rounded-lg overflow-hidden border shrink-0 grid place-items-center bg-white/5 ${
+                      idx === i ? "border-brand ring-2 ring-brand" : "border-white/20"
+                    }`}
+                    title={m.legenda ?? m.tipo}
+                  >
+                    <Thumb url={m.url} tipo={m.tipo} index={idx} />
+                  </button>
+                ))}
+                <span className="text-xs text-white/40 ml-2 whitespace-nowrap">
+                  ↑ ↓ mídias · duplo clique oculta
+                </span>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
@@ -472,9 +507,13 @@ function BlocoMidia({ url, tipo }: { url: string; tipo: string | null }) {
   const src = useMidiaUrl(url);
   if (!src) return null;
   return (
-    <div className="h-full w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 grid place-items-center">
-      {tipo === "imagem" && <img src={src} alt="" className="h-full w-full object-contain" />}
-      {tipo === "video" && <video src={src} controls autoPlay className="h-full w-full object-contain bg-black" />}
+    <div className="h-full w-full overflow-hidden bg-black grid place-items-center">
+      {tipo === "imagem" && (
+        <img src={src} alt="" className="max-h-full max-w-full h-full w-full object-contain" />
+      )}
+      {tipo === "video" && (
+        <video src={src} controls autoPlay className="h-full w-full object-contain bg-black" />
+      )}
       {tipo === "pdf" && (
         <object data={src} type="application/pdf" className="w-full h-full">
           <a href={src} target="_blank" rel="noreferrer" className="block p-4 text-brand underline">Abrir PDF</a>
