@@ -312,38 +312,54 @@ function Presenter({
       </div>
 
       {/* Slide */}
-      <div className="flex-1 flex items-center justify-center p-12 overflow-hidden">
+      <div className="flex-1 flex items-stretch justify-center px-8 py-6 overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-6xl"
-          >
-            <div className="text-brand text-sm uppercase tracking-widest font-semibold mb-4">
-              Bloco {idx + 1} de {blocos.length}
-            </div>
-            <h1
-              className="text-6xl lg:text-7xl font-bold leading-tight tracking-tight"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              {current.titulo}
-            </h1>
-            {current.descricao && (
-              <p className="text-2xl text-white/80 mt-6 leading-relaxed max-w-4xl">
-                {current.descricao}
-              </p>
-            )}
-            <BlocoGaleria key={`g-${current.id}`} midias={parseMidias(current)} />
-            {current.observacoes && (
-              <div className="mt-8 px-5 py-3 rounded-lg bg-white/5 border border-white/10 text-sm text-white/60 max-w-3xl">
-                <span className="font-semibold text-white/80">Notas: </span>
-                {current.observacoes}
-              </div>
-            )}
-          </motion.div>
+          {(() => {
+            const midias = parseMidias(current);
+            const temMidia = midias.length > 0;
+            return (
+              <motion.div
+                key={current.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className={`w-full flex flex-col min-h-0 ${temMidia ? "max-w-none" : "max-w-6xl justify-center"}`}
+              >
+                <div className="shrink-0">
+                  <div className="text-brand text-sm uppercase tracking-widest font-semibold mb-2">
+                    Bloco {idx + 1} de {blocos.length}
+                  </div>
+                  <h1
+                    className={`font-bold leading-tight tracking-tight ${
+                      temMidia ? "text-3xl lg:text-4xl" : "text-6xl lg:text-7xl"
+                    }`}
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {current.titulo}
+                  </h1>
+                  {current.descricao && (
+                    <p
+                      className={`text-white/80 leading-relaxed max-w-5xl ${
+                        temMidia ? "text-lg mt-2 line-clamp-2" : "text-2xl mt-6"
+                      }`}
+                    >
+                      {current.descricao}
+                    </p>
+                  )}
+                </div>
+                {temMidia && (
+                  <BlocoGaleria key={`g-${current.id}`} midias={midias} />
+                )}
+                {current.observacoes && !temMidia && (
+                  <div className="mt-8 px-5 py-3 rounded-lg bg-white/5 border border-white/10 text-sm text-white/60 max-w-3xl">
+                    <span className="font-semibold text-white/80">Notas: </span>
+                    {current.observacoes}
+                  </div>
+                )}
+              </motion.div>
+            );
+          })()}
         </AnimatePresence>
       </div>
 
@@ -417,13 +433,15 @@ function BlocoGaleria({ midias }: { midias: MidiaItem[] }) {
   if (!midias.length) return null;
   const atual = midias[Math.min(i, midias.length - 1)];
   return (
-    <div className="mt-8">
-      <BlocoMidia url={atual.url} tipo={atual.tipo} />
+    <div className="mt-4 flex-1 min-h-0 flex flex-col">
+      <div className="flex-1 min-h-0">
+        <BlocoMidia url={atual.url} tipo={atual.tipo} />
+      </div>
       {atual.legenda && (
-        <div className="text-sm text-white/60 mt-2">{atual.legenda}</div>
+        <div className="text-sm text-white/60 mt-2 shrink-0">{atual.legenda}</div>
       )}
       {midias.length > 1 && (
-        <div className="flex items-center gap-2 mt-4 overflow-x-auto">
+        <div className="flex items-center gap-2 mt-3 overflow-x-auto shrink-0">
           {midias.map((m, idx) => (
             <button
               key={idx}
@@ -454,11 +472,11 @@ function BlocoMidia({ url, tipo }: { url: string; tipo: string | null }) {
   const src = useMidiaUrl(url);
   if (!src) return null;
   return (
-    <div className="max-h-[45vh] overflow-hidden rounded-xl border border-white/10">
-      {tipo === "imagem" && <img src={src} alt="" className="w-full max-h-[45vh] object-contain" />}
-      {tipo === "video" && <video src={src} controls className="w-full max-h-[45vh]" />}
+    <div className="h-full w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 grid place-items-center">
+      {tipo === "imagem" && <img src={src} alt="" className="h-full w-full object-contain" />}
+      {tipo === "video" && <video src={src} controls autoPlay className="h-full w-full object-contain bg-black" />}
       {tipo === "pdf" && (
-        <object data={src} type="application/pdf" className="w-full h-[45vh]">
+        <object data={src} type="application/pdf" className="w-full h-full">
           <a href={src} target="_blank" rel="noreferrer" className="block p-4 text-brand underline">Abrir PDF</a>
         </object>
       )}
