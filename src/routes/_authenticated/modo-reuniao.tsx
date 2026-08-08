@@ -312,7 +312,7 @@ function Presenter({
       </div>
 
       {/* Slide */}
-      <div className="flex-1 flex items-stretch justify-center px-8 py-6 overflow-hidden">
+      <div className="flex-1 relative flex items-stretch justify-center overflow-hidden">
         <AnimatePresence mode="wait">
           {(() => {
             const midias = parseMidias(current);
@@ -324,32 +324,34 @@ function Presenter({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className={`w-full flex flex-col min-h-0 ${temMidia ? "max-w-none" : "max-w-6xl justify-center"}`}
+                className={`w-full flex flex-col min-h-0 ${
+                  temMidia ? "max-w-none absolute inset-0" : "max-w-6xl justify-center px-8 py-6"
+                }`}
               >
-                <div className="shrink-0">
-                  <div className="text-brand text-sm uppercase tracking-widest font-semibold mb-2">
-                    Bloco {idx + 1} de {blocos.length}
-                  </div>
-                  <h1
-                    className={`font-bold leading-tight tracking-tight ${
-                      temMidia ? "text-3xl lg:text-4xl" : "text-6xl lg:text-7xl"
-                    }`}
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    {current.titulo}
-                  </h1>
-                  {current.descricao && (
-                    <p
-                      className={`text-white/80 leading-relaxed max-w-5xl ${
-                        temMidia ? "text-lg mt-2 line-clamp-2" : "text-2xl mt-6"
-                      }`}
+                {temMidia ? (
+                  <BlocoGaleria
+                    key={`g-${current.id}`}
+                    midias={midias}
+                    titulo={current.titulo}
+                    legendaBloco={`Bloco ${idx + 1} de ${blocos.length}`}
+                  />
+                ) : (
+                  <div className="shrink-0">
+                    <div className="text-brand text-sm uppercase tracking-widest font-semibold mb-2">
+                      Bloco {idx + 1} de {blocos.length}
+                    </div>
+                    <h1
+                      className="font-bold leading-tight tracking-tight text-6xl lg:text-7xl"
+                      style={{ fontFamily: "var(--font-display)" }}
                     >
-                      {current.descricao}
-                    </p>
-                  )}
-                </div>
-                {temMidia && (
-                  <BlocoGaleria key={`g-${current.id}`} midias={midias} />
+                      {current.titulo}
+                    </h1>
+                    {current.descricao && (
+                      <p className="text-white/80 leading-relaxed max-w-5xl text-2xl mt-6">
+                        {current.descricao}
+                      </p>
+                    )}
+                  </div>
                 )}
                 {current.observacoes && !temMidia && (
                   <div className="mt-8 px-5 py-3 rounded-lg bg-white/5 border border-white/10 text-sm text-white/60 max-w-3xl">
